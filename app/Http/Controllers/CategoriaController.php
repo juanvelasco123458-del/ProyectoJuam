@@ -13,8 +13,8 @@ class CategoriaController extends Controller
      */
     public function index()
     {
+        //
         $datos = Categoria::all();
-        // dd($datos);
         return view('categorias.index',compact('datos'));
     }
 
@@ -23,7 +23,8 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        return view('categoria.new');
+        //
+        return view('categorias.new');
     }
 
     /**
@@ -31,20 +32,20 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
+        //
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:50',
-            'descripcion' => 'required|string|max:150'
+            'nombre' => 'required|max:50',
+            'descripcion' => 'required|max:200'
         ]);
-
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)   ->withInput();
+            return back()->withErrors($validator)
+                         ->withInput();
         }
-        else{
+        else {
             Categoria::create($request->all());
-            return redirect('categorias')->with('type', 'success')->with('message', 'Categoria creada exitosamente');
-        }
-
+            return redirect('categorias')->with('type','success')
+                                         ->with('message','Registro creado exitosamente.');
+        } 
     }
 
     /**
@@ -60,6 +61,7 @@ class CategoriaController extends Controller
      */
     public function edit(string $id)
     {
+        //
         $datos = Categoria::find($id);
         return view('categorias.edit', compact('datos'));
     }
@@ -67,20 +69,21 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Categoria $categoria)
     {
-        //dd($request);
+        //
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:50',
-            'descripcion' => 'required|string|max:150'
+            'nombre' => 'required|max:50',
+            'descripcion' => 'required|max:200'
         ]);
-
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        } else {
-            $categoria = Categoria::find($id);
+            return back()->withErrors($validator)
+                         ->withInput();
+        }
+        else {
             $categoria->update($request->all());
-            return redirect('categorias')->with('type', 'success')->with('message', 'Categoria actualizada exitosamente');
+            return redirect('categorias')->with('type','warning')
+                                         ->with('message','Registro actualizado exitosamente.');
         }
     }
 
@@ -89,7 +92,9 @@ class CategoriaController extends Controller
      */
     public function destroy(string $id)
     {
+        //
         Categoria::destroy($id);
-        return redirect('categorias')->with('type', 'danger')->with('message', 'Categoria eliminada exitosamente'); 
+        return redirect('categorias')->with('type','danger')
+                                         ->with('message','El registro se eliminó exitosamente.');
     }
 }
